@@ -52,7 +52,7 @@ export class GameController {
         const { x, y } = coordinates
 
         const grid = this.currentPlayer === this.player1 ? '#player2-grid' : '#player1-grid'
-        const gridCell = document.querySelector(`${grid}.cell[data-x="${x}"][data-y="${y}"]`)
+        const gridCell = document.querySelector(`${grid} .cell[data-x="${x}"][data-y="${y}"]`)
 
         if (result == 'hit') {
             gridCell.classList.add('hit')

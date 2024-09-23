@@ -31,15 +31,15 @@ body {
     cursor: pointer;
 }
 
-.hit {
-    background-color: red;
-}
 
-.miss {
-    background-color: rgb(115, 161, 54);
-}
 .cell.ship{
     background-color: gray;
     
-    
+}
+.cell.hit {
+    background-color: red;
+}
+
+.cell.mis {
+    background-color: rgb(115, 161, 54);
 }
