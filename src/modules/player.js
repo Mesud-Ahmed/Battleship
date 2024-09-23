@@ -1,7 +1,11 @@
 import { Gameboard } from "./Gameboard"
-class player{
-    constructor(){
-        this.realPlayer = new Gameboard()
-        this.computer = new Gameboard()
+export class player{
+    constructor(name,isComputer = false){
+        this.name = name
+        this.gameboard = new Gameboard()
+        this.isComputer = isComputer
+    }
+    attack(targetPlayer,coordinates){
+        return targetPlayer.gameboard.receiveAttack(coordinates)
     }
 }

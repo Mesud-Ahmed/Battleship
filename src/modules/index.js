@@ -1,17 +1,9 @@
 import Ship from "./Ship";
 import { Gameboard } from "./Gameboard";
-
-const myShip = new Ship(3);
-
-
-const myGameboard = new Gameboard()
-
-myGameboard.placeShip(myShip,{x:0,y:0},'horizontal')
+import { player } from "./player";
+import { createGrid } from "./dom";
+import { playerShipUi } from "./dom";
+import { GameController } from "./GameController";
+import "../styles.css"
 
 
-
-myGameboard.receiveAttack({x:0,y:0})
-myGameboard.receiveAttack({x:1,y:0})
-myGameboard.receiveAttack({x:2,y:0})
-
-console.log(myGameboard.areAllShipsSunk())
