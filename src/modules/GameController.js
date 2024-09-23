@@ -8,13 +8,14 @@ export class GameController {
         this.computer = new player('computer', true)
         this.currentPlayer = this.player1
         this.isGameOver = false
+        this.cptrAttackCoords = new Set();
     }
     startGame() {
         const player1Ship = new Ship(3)
         const cptrShip = new Ship(3)
 
         this.player1.gameboard.placeShip(player1Ship, { x: 0, y: 0 }, 'horizontal')
-        playerShipUi({ x: 0, y: 0 },player1Ship.length,'horizontal')
+        playerShipUi({ x: 0, y: 0 }, player1Ship.length, 'horizontal')
         this.computer.gameboard.placeShip(cptrShip, { x: 5, y: 5 }, 'vertical')
 
     }
@@ -30,20 +31,28 @@ export class GameController {
         }
 
         this.currentPlayer = this.computer
-        this.computerAttack()
-        if(this.player1.gameboard.areAllShipsSunk()){
-            this.isGameOver = true
-            alert('computer wins!')
-            return
-        }
+        setTimeout(() => {
+            this.computerAttack()
+            if (this.player1.gameboard.areAllShipsSunk()) {
+                this.isGameOver = true
+                alert('computer wins!')
+                return
+            }
 
-        this.currentPlayer = this.player1
+            this.currentPlayer = this.player1
+        }, 2000)
+
 
     }
 
     computerAttack() {
-        const x = Math.floor(Math.random() * 10)
-        const y = Math.floor(Math.random() * 10)
+        let x,y
+        do{
+            x = Math.floor(Math.random() * 10)
+            y = Math.floor(Math.random() * 10)
+        }while(this.cptrAttackCoords.has(`${x},${y}`))
+        
+        this.cptrAttackCoords.add(`${x},${y}`)
 
         const result = this.computer.attack(this.player1, { x, y })
         this.attackUI({ x, y }, result)

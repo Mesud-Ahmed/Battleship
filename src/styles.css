@@ -28,7 +28,9 @@ body {
     background-color: lightblue;
     border: 1px solid #333;
     
-    cursor: pointer;
+}
+#player2-grid div:hover{
+    cursor:crosshair;
 }
 
 
