@@ -1,30 +1,56 @@
 import { GameController } from "./GameController";
 
-document.addEventListener('DOMContentLoaded', () => {
-    
-    const startBtn = document.querySelector("#start-game")
-    
-    const player1Grid = document.getElementById('player1-grid');
-    const player2Grid = document.getElementById('player2-grid');
+const player1Grid = document.getElementById('player1-grid');
+const player2Grid = document.getElementById('player2-grid');
+const ships = document.querySelectorAll('.ship')
 
-    createGrid();  
+createGrid();
+const gamecontroller = new GameController()
 
-    const gamecontroller = new GameController()
-    gamecontroller.startGame()
+ships.forEach(ship => {
+    ship.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('length', ship.dataset.length)
+        e.dataTransfer.setData('direction', ship.dataset.direction)
 
-  
-    player2Grid.addEventListener('click', (e) => {
-        const x = parseInt(e.target.getAttribute('data-x'))
-        const y = parseInt(e.target.getAttribute('data-y'))
-
-        gamecontroller.playRound({ x, y })
+    })
+    ship.addEventListener('click', () => {
+        toggleDirection(ship)
     })
 })
 
+player1Grid.addEventListener('dragover', (e) => {
+    e.preventDefault()
+})
 
+player1Grid.addEventListener('drop', (e) => {
+    e.preventDefault()
+    const x = parseInt(e.target.getAttribute('data-x'))
+    const y = parseInt(e.target.getAttribute('data-y'))
+
+    const length = e.dataTransfer.getData('length')
+    const direction = e.dataTransfer.getData('direction')
+
+    gamecontroller.startGame({ x, y }, length, direction)
+    playerShipUi({ x, y }, length, direction)
+})
+
+
+
+player2Grid.addEventListener('click', (e) => {
+    const x = parseInt(e.target.getAttribute('data-x'))
+    const y = parseInt(e.target.getAttribute('data-y'))
+
+    gamecontroller.playRound({ x, y })
+})
+
+function toggleDirection(ship) {
+    if (ship.dataset.direction == 'horizontal') {
+        ship.dataset.direction = 'vertical'
+    } else {
+        ship.dataset.direction = 'horizontal'
+    }
+}
 function createGrid() {
-    const player1Grid = document.getElementById('player1-grid');
-    const player2Grid = document.getElementById('player2-grid');
     for (let i = 0; i < 100; i++) {
         const x = i % 10
         const y = Math.floor(i / 10)
@@ -45,21 +71,18 @@ function createGrid() {
 }
 
 function playerShipUi(cords, length, direction) {
-    const player1Grid = document.getElementById('player1-grid');
+    let { x, y } = cords
     for (let i = 0; i < length; i++) {
-        let curx = cords.x
-        let cury = cords.y
-
+        let gridCell
         if (direction === 'horizontal') {
-            curx += i
-        } else if (direction === 'vertical') {
-            cury += i
+            gridCell = document.querySelector(`.cell[data-x="${x + i}"][data-y="${y}"]`)
+
+        } else {
+            gridCell = document.querySelector(`.cell[data-x="${x}"][data-y="${y + i}"]`)
+
         }
 
-        const gridCell = document.querySelector(`.cell[data-x="${curx}"][data-y="${cury}"]`)
         if (gridCell) {
-            console.log(`Placing ship part at (${curx}, ${cury})`); // Debugging
-            document.querySelector('.cell[data-x="0"][data-y="0"]')
 
             gridCell.classList.add('ship');
         }

@@ -8,6 +8,7 @@ body {
 
 #game-container {
     text-align: center;
+    
 }
 #grids{
     display: flex;
@@ -45,3 +46,12 @@ body {
 .cell.mis {
     background-color: rgb(115, 161, 54);
 }
+
+.ship{
+    width: 40px;
+    height: 40px;
+    background-color: rgb(126, 126, 221);
+    cursor: grab;
+    
+}
+
