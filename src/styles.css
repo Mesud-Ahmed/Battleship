@@ -48,10 +48,22 @@ body {
 }
 
 .ship{
+    
+    display: flex;
+    margin-bottom: 5px;
+}
+.ship-cell {
     width: 40px;
     height: 40px;
-    background-color: rgb(126, 126, 221);
-    cursor: grab;
-    
+    background-color: lightgray;
+    border: 1px solid rgb(117, 99, 99);
 }
-
+.ship[data-direction="horizontal"] {
+    flex-direction: row; 
+}
+.ship[data-direction="vertical"] {
+    flex-direction: column;
+}
+.ship-being-dragged{
+    opacity: 0.7;
+}

@@ -8,10 +8,12 @@ createGrid();
 const gamecontroller = new GameController()
 
 ships.forEach(ship => {
+    ship.setAttribute('draggable', true);
     ship.addEventListener('dragstart', (e) => {
+
         e.dataTransfer.setData('length', ship.dataset.length)
         e.dataTransfer.setData('direction', ship.dataset.direction)
-
+        ship.classList.add('ship-being-dragged');
     })
     ship.addEventListener('click', () => {
         toggleDirection(ship)
@@ -29,9 +31,15 @@ player1Grid.addEventListener('drop', (e) => {
 
     const length = e.dataTransfer.getData('length')
     const direction = e.dataTransfer.getData('direction')
+    const draggedShip = document.querySelector('.ship-being-dragged');
+    draggedShip.classList.remove('ship-being-dragged');
 
     gamecontroller.startGame({ x, y }, length, direction)
     playerShipUi({ x, y }, length, direction)
+
+    if (draggedShip) {
+        draggedShip.remove();
+    }
 })
 
 
@@ -49,6 +57,7 @@ function toggleDirection(ship) {
     } else {
         ship.dataset.direction = 'horizontal'
     }
+    
 }
 function createGrid() {
     for (let i = 0; i < 100; i++) {
