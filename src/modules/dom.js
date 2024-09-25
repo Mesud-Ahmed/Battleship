@@ -6,10 +6,14 @@ const ships = document.querySelectorAll('.ship')
 const resetButton = document.getElementById('reset-button');
 const playerShipContainer = document.querySelector("#ships")
 const intro = document.querySelector("#intro")
+const message = document.querySelector("#message")
+const intrude = document.querySelector("#intrude")
+
 createGrid();
 const gamecontroller = new GameController()
 
 resetButton.addEventListener('click', resetGame);
+
 
 ships.forEach(ship => {
     ship.setAttribute('draggable', true);
@@ -38,14 +42,14 @@ player1Grid.addEventListener('drop', (e) => {
     const y = parseInt(e.target.getAttribute('data-y'))
 
     const length = e.dataTransfer.getData('length')
-    
+
     const direction = e.dataTransfer.getData('direction')
 
     const validPlacemnet = gamecontroller.validatePlayerShip({ x, y }, length, direction)
 
     if (validPlacemnet) {
         const draggedShip = document.querySelector('.ship-being-dragged');
-        
+
         gamecontroller.startGame({ x, y }, length, direction)
         playerShipUi({ x, y }, length, direction)
         draggedShip.classList.remove('ship-being-dragged');
@@ -53,8 +57,13 @@ player1Grid.addEventListener('drop', (e) => {
         if (draggedShip) {
             draggedShip.remove();
         }
-        if(playerShipContainer.childElementCount === 1){
-            intro.remove()
+
+        if (playerShipContainer.childElementCount === 2) {
+            intro.style.display = 'none'
+            setTimeout(() => {
+                message.style.display = 'block'
+
+            }, 1000)
         }
     }
 
@@ -68,16 +77,29 @@ player2Grid.addEventListener('click', (e) => {
 
     gamecontroller.playRound({ x, y })
 })
-
+intrude.addEventListener("click", () => {
+    gamecontroller.addClassToComputerShips();
+})
 
 function resetGame() {
     clearGrid(player1Grid);
     clearGrid(player2Grid);
 
+    intro.style.display = 'block'
+    message.style.display = 'none'
+
+    const computerShips = document.querySelectorAll('#player2-grid .cell.cptr-ship');
+    
+    
+    computerShips.forEach(cell => {
+        cell.classList.remove('cptr-ship');
+    });
+
     ships.forEach(ship => {
         ship.classList.remove('ship-being-dragged');
-        playerShipContainer.appendChild(ship); // Re-add ships to the grid (or wherever they belong)
+        playerShipContainer.appendChild(ship); 
         ship.setAttribute('draggable', true);
+        
     });
     gamecontroller.init();
 }

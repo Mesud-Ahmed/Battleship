@@ -43,6 +43,7 @@ body {
     background-color: red;
 }
 
+
 .cell.mis {
     background-color: rgb(115, 161, 54);
 }
@@ -66,4 +67,10 @@ body {
 }
 .ship-being-dragged{
     opacity: 0.7;
+}
+#message{
+    display: none;
+}
+.cptr-ship{
+    opacity:0.6
 }

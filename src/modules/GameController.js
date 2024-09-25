@@ -14,7 +14,7 @@ export class GameController {
         this.isGameOver = false
         this.cptrAttackCoords = new Set();
     }
-    
+
     startGame(cords, length, direction) {
         let player1Ship = new Ship(length);
         let cptrShip = new Ship(length);
@@ -154,4 +154,17 @@ export class GameController {
 
         }
     }
+    // Inside GameController class
+addClassToComputerShips() {
+    this.computer.gameboard.ships.forEach(shipObj => {
+        const { coordinates } = shipObj; // Get the coordinates of the ship
+
+        // Loop through the coordinates and add the class to the corresponding grid cells
+        coordinates.forEach(coord => {
+            const gridCell = document.querySelector(`#player2-grid .cell[data-x="${coord.x}"][data-y="${coord.y}"]`);
+            gridCell.classList.add('cptr-ship')
+        });
+    });
+}
+
 }
