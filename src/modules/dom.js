@@ -18,11 +18,15 @@ ships.forEach(ship => {
     ship.addEventListener('click', () => {
         toggleDirection(ship)
     })
+    ship.addEventListener('dragend', () => {
+        ship.classList.remove('ship-being-dragged');
+    });
 })
 
 player1Grid.addEventListener('dragover', (e) => {
     e.preventDefault()
 })
+
 
 player1Grid.addEventListener('drop', (e) => {
     e.preventDefault()
@@ -30,16 +34,23 @@ player1Grid.addEventListener('drop', (e) => {
     const y = parseInt(e.target.getAttribute('data-y'))
 
     const length = e.dataTransfer.getData('length')
+    
     const direction = e.dataTransfer.getData('direction')
-    const draggedShip = document.querySelector('.ship-being-dragged');
-    draggedShip.classList.remove('ship-being-dragged');
 
-    gamecontroller.startGame({ x, y }, length, direction)
-    playerShipUi({ x, y }, length, direction)
+    const validPlacemnet = gamecontroller.validatePlayerShip({ x, y }, length, direction)
 
-    if (draggedShip) {
-        draggedShip.remove();
+    if (validPlacemnet) {
+        const draggedShip = document.querySelector('.ship-being-dragged');
+        
+        gamecontroller.startGame({ x, y }, length, direction)
+        playerShipUi({ x, y }, length, direction)
+        draggedShip.classList.remove('ship-being-dragged');
+
+        if (draggedShip) {
+            draggedShip.remove();
+        }
     }
+
 })
 
 
@@ -51,13 +62,14 @@ player2Grid.addEventListener('click', (e) => {
     gamecontroller.playRound({ x, y })
 })
 
+
 function toggleDirection(ship) {
     if (ship.dataset.direction == 'horizontal') {
         ship.dataset.direction = 'vertical'
     } else {
         ship.dataset.direction = 'horizontal'
     }
-    
+
 }
 function createGrid() {
     for (let i = 0; i < 100; i++) {

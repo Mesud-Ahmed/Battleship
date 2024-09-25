@@ -28,7 +28,11 @@ export class Gameboard {
         this.ships.push({ ship, coordinates: shipCoordinates });
     }
 
-
+isCellOccupied(x, y) {
+        return this.ships.some(shipObj =>
+            shipObj.coordinates.some(coord => coord.x === x && coord.y === y)
+        );
+    }
     receiveAttack(coordinates) {
         const { x, y } = coordinates;
 

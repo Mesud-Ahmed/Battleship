@@ -13,10 +13,10 @@ export class GameController {
     startGame(cords, length, direction) {
         let player1Ship = new Ship(length);
         let cptrShip = new Ship(length);
-    
+
         // Place Player 1's ship
         this.player1.gameboard.placeShip(player1Ship, cords, direction);
-    
+
         // Attempt to place the computer's ship
         let isPlaced = false;
         while (!isPlaced) {
@@ -24,7 +24,7 @@ export class GameController {
             let x = Math.floor(Math.random() * 10);
             let y = Math.floor(Math.random() * 10);
             let cptrDirection = Math.random() > 0.5 ? 'horizontal' : 'vertical';
-    
+
             // Ensure the ship fits within the grid and does not overlap
             if (this.isValidPlacement(this.computer.gameboard, cptrShip, { x, y }, cptrDirection)) {
                 this.computer.gameboard.placeShip(cptrShip, { x, y }, cptrDirection);
@@ -32,18 +32,18 @@ export class GameController {
             }
         }
     }
-    
+
     // Function to check if a ship can be placed at the given coordinates
     isValidPlacement(gameboard, ship, startCoordinates, direction) {
         const { x, y } = startCoordinates;
         const shipLength = ship.length;
-    
+
         let shipCoordinates = [];
-    
+
         if (direction === 'horizontal') {
             // Check if the ship exceeds the grid boundary
             if (x + shipLength > 10) return false;
-    
+
             // Check for overlapping ships
             for (let i = 0; i < shipLength; i++) {
                 const newCoord = { x: x + i, y };
@@ -53,7 +53,7 @@ export class GameController {
         } else if (direction === 'vertical') {
             // Check if the ship exceeds the grid boundary
             if (y + shipLength > 10) return false;
-    
+
             // Check for overlapping ships
             for (let i = 0; i < shipLength; i++) {
                 const newCoord = { x, y: y + i };
@@ -61,18 +61,42 @@ export class GameController {
                 shipCoordinates.push(newCoord);
             }
         }
-    
+
         // If no issues, return true (valid placement)
         return true;
     }
-    
+    validatePlayerShip(cords, length, direction) {
+
+        const x = Number(cords.x);
+        const y = Number(cords.y);
+        length = Number(length);
+
+        if (direction == 'horizontal' && x + length > 10) {
+            
+            return false
+        }
+        if (direction == 'vertical' && y + length > 10) {
+            return false
+        }
+
+        for (let i = 0; i < length; i++) {
+            let currentX = direction == 'horizontal' ? x + i : x
+            let currentY = direction == 'horizontal' ? y : y + i
+            const newcord = { x: currentX, y: currentY }
+            
+            if (this.player1.gameboard.isCellOccupied(currentX, currentY)) {
+                return false
+            }
+        }
+        return true
+    }
     // Check if a specific coordinate is already occupied by a ship
     isOccupied(gameboard, coordinates) {
         return gameboard.ships.some(shipObj =>
             shipObj.coordinates.some(coord => coord.x === coordinates.x && coord.y === coordinates.y)
         );
     }
-    
+
     playRound(coordinates) {
         if (this.isGameOver) return
         const result = this.currentPlayer.attack(this.computer, coordinates)
@@ -100,12 +124,12 @@ export class GameController {
     }
 
     computerAttack() {
-        let x,y
-        do{
+        let x, y
+        do {
             x = Math.floor(Math.random() * 10)
             y = Math.floor(Math.random() * 10)
-        }while(this.cptrAttackCoords.has(`${x},${y}`))
-        
+        } while (this.cptrAttackCoords.has(`${x},${y}`))
+
         this.cptrAttackCoords.add(`${x},${y}`)
 
         const result = this.computer.attack(this.player1, { x, y })
