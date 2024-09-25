@@ -4,12 +4,17 @@ import Ship from "./Ship";
 
 export class GameController {
     constructor() {
+        this.init()
+        
+    }
+    init(){
         this.player1 = new player('Player1')
         this.computer = new player('computer', true)
         this.currentPlayer = this.player1
         this.isGameOver = false
         this.cptrAttackCoords = new Set();
     }
+    
     startGame(cords, length, direction) {
         let player1Ship = new Ship(length);
         let cptrShip = new Ship(length);

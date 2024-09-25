@@ -3,9 +3,13 @@ import { GameController } from "./GameController";
 const player1Grid = document.getElementById('player1-grid');
 const player2Grid = document.getElementById('player2-grid');
 const ships = document.querySelectorAll('.ship')
-
+const resetButton = document.getElementById('reset-button');
+const playerShipContainer = document.querySelector("#ships")
+const intro = document.querySelector("#intro")
 createGrid();
 const gamecontroller = new GameController()
+
+resetButton.addEventListener('click', resetGame);
 
 ships.forEach(ship => {
     ship.setAttribute('draggable', true);
@@ -49,6 +53,9 @@ player1Grid.addEventListener('drop', (e) => {
         if (draggedShip) {
             draggedShip.remove();
         }
+        if(playerShipContainer.childElementCount === 1){
+            intro.remove()
+        }
     }
 
 })
@@ -63,6 +70,24 @@ player2Grid.addEventListener('click', (e) => {
 })
 
 
+function resetGame() {
+    clearGrid(player1Grid);
+    clearGrid(player2Grid);
+
+    ships.forEach(ship => {
+        ship.classList.remove('ship-being-dragged');
+        playerShipContainer.appendChild(ship); // Re-add ships to the grid (or wherever they belong)
+        ship.setAttribute('draggable', true);
+    });
+    gamecontroller.init();
+}
+
+function clearGrid(grid) {
+    const cells = grid.querySelectorAll('.cell');
+    cells.forEach(cell => {
+        cell.classList.remove('ship', 'hit', 'mis');
+    });
+}
 function toggleDirection(ship) {
     if (ship.dataset.direction == 'horizontal') {
         ship.dataset.direction = 'vertical'
