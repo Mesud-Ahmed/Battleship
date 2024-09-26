@@ -91,7 +91,8 @@ intrude.addEventListener("click", () => {
 function resetGame() {
     clearGrid(player1Grid);
     clearGrid(player2Grid);
-
+    
+    oneShipPlaced = false
     intro.style.display = 'block'
     message.style.display = 'none'
 

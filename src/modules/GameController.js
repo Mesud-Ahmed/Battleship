@@ -8,7 +8,7 @@ export class GameController {
         
     }
     init(){
-        this.player1 = new player('Player1')
+        this.player1 = new player('Player')
         this.computer = new player('computer', true)
         this.currentPlayer = this.player1
         this.isGameOver = false
