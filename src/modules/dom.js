@@ -8,6 +8,7 @@ const playerShipContainer = document.querySelector("#ships")
 const intro = document.querySelector("#intro")
 const message = document.querySelector("#message")
 const intrude = document.querySelector("#intrude")
+let oneShipPlaced = false
 
 createGrid();
 const gamecontroller = new GameController()
@@ -53,6 +54,7 @@ player1Grid.addEventListener('drop', (e) => {
         gamecontroller.startGame({ x, y }, length, direction)
         playerShipUi({ x, y }, length, direction)
         draggedShip.classList.remove('ship-being-dragged');
+        oneShipPlaced = true
 
         if (draggedShip) {
             draggedShip.remove();
@@ -72,10 +74,15 @@ player1Grid.addEventListener('drop', (e) => {
 
 
 player2Grid.addEventListener('click', (e) => {
-    const x = parseInt(e.target.getAttribute('data-x'))
-    const y = parseInt(e.target.getAttribute('data-y'))
+    if (oneShipPlaced) {
+        const x = parseInt(e.target.getAttribute('data-x'))
+        const y = parseInt(e.target.getAttribute('data-y'))
 
-    gamecontroller.playRound({ x, y })
+        gamecontroller.playRound({ x, y })
+    }else{
+        alert('Error: Place at least one of your ship!')
+    }
+
 })
 intrude.addEventListener("click", () => {
     gamecontroller.addClassToComputerShips();
@@ -89,17 +96,17 @@ function resetGame() {
     message.style.display = 'none'
 
     const computerShips = document.querySelectorAll('#player2-grid .cell.cptr-ship');
-    
-    
+
+
     computerShips.forEach(cell => {
         cell.classList.remove('cptr-ship');
     });
 
     ships.forEach(ship => {
         ship.classList.remove('ship-being-dragged');
-        playerShipContainer.appendChild(ship); 
+        playerShipContainer.appendChild(ship);
         ship.setAttribute('draggable', true);
-        
+
     });
     gamecontroller.init();
 }
